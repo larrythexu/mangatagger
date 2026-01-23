@@ -8,14 +8,21 @@ interface Genre {
     name: string;
 }
 
-interface Ranking {
-    rank: number;
+interface AlternativeTitles {
+    synonyms: string[];
+    en: string;
+    ja: string;
 }
 
-interface Manga {
-    id: number;
-    title: string;
-    main_picture: Picture;
-    genres: Genre[];
-    ranking: Ranking;
+export interface Manga {
+    node: {
+        id: number;
+        title: string;
+        main_picture: Picture;
+        genres: Genre[];
+        alternative_titles: AlternativeTitles;
+    }
+    ranking: {
+        rank: number;
+    };
 }

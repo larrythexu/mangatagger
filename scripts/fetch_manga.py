@@ -14,8 +14,9 @@ headers = {
     "X-MAL-CLIENT-ID": api_key
 }
 params = {
+    "ranking_type": "bypopularity",
     "limit": 500,
-    "fields": "genres,ranking"
+    "fields": "genres,ranking,alternative_titles"
 }
 
 response = requests.get(BASE_URL, headers=headers, params=params)
