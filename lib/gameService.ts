@@ -6,7 +6,7 @@ import { getDailyManga } from "./mangaService";
 //     return genreList;
 // }
 
-const GUESSES = 3;
+const NUM_GUESSES = 3;
 
 interface GameState {
     date: string;
@@ -28,7 +28,7 @@ export function initGame() {
         date: today.toDateString(),
         manga,
         numGuessesMade: 0,
-        numLives: GUESSES,
+        numLives: NUM_GUESSES,
         status: "PLAYING"
     }
 }

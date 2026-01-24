@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+from random import shuffle
 
 BASE_URL = "https://api.myanimelist.net/v2/manga/ranking"
 OUTPUT = "data/top500manga.json"
@@ -25,7 +26,12 @@ if response.status_code != 200:
     exit(1)
 
 mangaResponse = response.json()
+mangaList = mangaResponse["data"]
+
+# Shuffle manga list
+shuffle(mangaList)
+
 with open(OUTPUT, "w+") as f:
-    json.dump(mangaResponse, f, indent=4)
+    json.dump(mangaList, f, indent=4)
 
 print("Fetched manga successfully")
