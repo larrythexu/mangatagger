@@ -1,3 +1,4 @@
+// Data Types
 interface Picture {
     medium: string;
     large: string;
@@ -26,3 +27,18 @@ export interface Manga {
         rank: number;
     };
 }
+
+// Game Types
+export interface GameState {
+    date: string;
+    manga: Manga;
+    numGuessesMade: number;
+    guessedGenres: Set<string>;
+    remainingGenres: Set<string>;
+    numLives: number
+    status: "PLAYING" | "WON" | "LOST";
+}
+
+export type answerResult =
+    | { valid: true, gameState: GameState }
+    | { valid: false, gameState: GameState, reason: string }
