@@ -40,6 +40,8 @@ export function initGame() {
         numLives: NUM_GUESSES,
         status: "PLAYING"
     }
+    console.log(newState)
+
     saveGameState(newState); //TODO: consider if we save state here or elsewhere?
     return newState;
 }
@@ -58,14 +60,15 @@ export function submitAnswer(gameState: GameState, playerAnswer: string): answer
     // Check if genre is valid
     playerAnswer = playerAnswer.toLowerCase()
     if (!GENRE_SET.has(playerAnswer)) {
-        console.log("Invalid genre!")
         return { valid: false, gameState, reason: "Invalid genre!" }
+    } else if (gameState.guessedGenres.has(playerAnswer)) {
+        return { valid: false, gameState, reason: "Already guessed genre!" }
     }
 
     gameState.numGuessesMade++
 
     // Handle answer
-    if (gameState.remainingGenres.has(playerAnswer)) {
+    if (getAnswer().has(playerAnswer)) {
         gameState.guessedGenres.add(playerAnswer)
         gameState.remainingGenres.delete(playerAnswer)
 
