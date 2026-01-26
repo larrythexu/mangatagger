@@ -6,6 +6,10 @@ import { loadGameState, saveGameState } from "./storage";
 const GENRE_SET = new Set(genreList)
 const NUM_GUESSES = 3;
 
+export function getNumGuesses(): number {
+    return NUM_GUESSES;
+}
+
 // Check based on last gameState? if we can play
 export function isNewDay(): boolean {
     const gameState = loadGameState()
@@ -44,6 +48,14 @@ export function initGame() {
 
     saveGameState(newState); //TODO: consider if we save state here or elsewhere?
     return newState;
+}
+
+export function loadGame() {
+    const gameState = loadGameState()
+    if (!gameState) {
+        return initGame()
+    }
+    return gameState
 }
 
 // SubmitAnswer: Handle main game logic (TODO: possible add guess limit as well)
