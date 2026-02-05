@@ -1,7 +1,7 @@
 import genreList from "@/data/genres.json"
 import { type GameState, type answerResult } from "@/types";
 import { getDailyManga } from "./mangaService";
-import { loadGameState, saveGameState } from "./storage";
+import { saveGameState } from "./storage";
 
 const GENRE_SET = new Set(genreList)
 const NUM_GUESSES = 3;
@@ -10,25 +10,9 @@ export function getNumGuesses(): number {
     return NUM_GUESSES;
 }
 
-// Check based on last gameState? if we can play
-export function isNewDay(): boolean {
-    const gameState = loadGameState()
-    const today = new Date();
-    return today.toDateString() !== gameState?.date;
-}
-
 // Retrieve daily genres answers
-// Only computes answers on new day OR if DAILY_ANSWER is null, uses cached answer otherwise
-let DAILY_ANSWER: Set<string> | null = null;
-export function getAnswer(): Set<string> {
-    // Check if new day, if so, get new answer
-    if (isNewDay() || !DAILY_ANSWER) {
-        const manga = getDailyManga();
-        DAILY_ANSWER = new Set(manga.node.genres.map((genre) => genre.name.toLowerCase()));
-        return DAILY_ANSWER;
-    }
-
-    return DAILY_ANSWER;
+export function getAnswer(gameState: GameState): Set<string> {
+    return new Set(gameState.manga.node.genres.map((genre) => genre.name.toLowerCase()));
 }
 
 export function initGame() {
@@ -44,18 +28,9 @@ export function initGame() {
         numLives: NUM_GUESSES,
         status: "PLAYING"
     }
-    console.log(newState)
 
     saveGameState(newState); //TODO: consider if we save state here or elsewhere?
     return newState;
-}
-
-export function loadGame() {
-    const gameState = loadGameState()
-    if (!gameState) {
-        return initGame()
-    }
-    return gameState
 }
 
 // SubmitAnswer: Handle main game logic (TODO: possible add guess limit as well)
@@ -80,12 +55,12 @@ export function submitAnswer(gameState: GameState, playerAnswer: string): answer
     gameState.numGuessesMade++
 
     // Handle answer
-    if (getAnswer().has(playerAnswer)) {
+    if (getAnswer(gameState).has(playerAnswer)) {
         gameState.guessedGenres.add(playerAnswer)
         gameState.remainingGenres.delete(playerAnswer)
 
         // Check if player has won
-        if (gameState.guessedGenres === getAnswer()) {
+        if (gameState.guessedGenres === getAnswer(gameState)) {
             gameState.status = "WON"
         }
     } else {

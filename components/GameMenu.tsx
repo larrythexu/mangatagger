@@ -1,16 +1,32 @@
 "use client"
 
-import { useState } from 'react';
-import { loadGame, submitAnswer } from '../lib/gameService';
+import { useEffect, useState } from 'react';
+import { initGame, submitAnswer } from '../lib/gameService';
 import { GameState } from '@/types';
 import Image from 'next/image';
 import { getDailyManga } from "@/lib/mangaService";
 import StatusDisplay from './StatusDisplay';
+import { loadLocalGameState } from '@/lib/storage';
 
 
 export default function GameMenu() {
     const dailyManga = getDailyManga();
-    const [gameState, setGameState] = useState<GameState | null>(loadGame());
+    const [gameState, setGameState] = useState<GameState | null>(null);
+
+    // Load previous game state - start new game depending on date
+    useEffect(() => {
+        const localState = loadLocalGameState()
+        const today = new Date().toDateString();
+
+        if (localState && localState.date === today) {
+            // eslint-disable-next-line
+            setGameState(localState);
+        } else {
+            console.log("New day from previous gamestate, initiating new game!")
+            const newState = initGame()
+            setGameState(newState);
+        }
+    }, [])
 
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [winMessage, setWinMessage] = useState<string>("");
