@@ -10,7 +10,6 @@ import { loadLocalGameState } from '@/lib/storage';
 
 
 export default function GameMenu() {
-    const dailyManga = getDailyManga();
     const [gameState, setGameState] = useState<GameState | null>(null);
 
     // Load previous game state - start new game depending on date
@@ -61,7 +60,7 @@ export default function GameMenu() {
             ) : (
                 <div className="flex flex-col items-center">
                     {gameState.manga.node.title}
-                    <Image className="h-80 w-auto" src={gameState.manga.node.main_picture.large} alt={gameState.manga.node.title} width={500} height={500} />
+                    <Image className="h-80 w-auto" src={gameState.manga.node.main_picture.large} alt={gameState.manga.node.title} width={402} height={600} />
 
                     <StatusDisplay gameState={gameState} />
                 </div>
