@@ -4,13 +4,16 @@ import { useEffect, useState } from 'react';
 import { initGame, submitAnswer } from '../lib/gameService';
 import { GameState } from '@/types';
 import Image from 'next/image';
-import { getDailyManga } from "@/lib/mangaService";
 import StatusDisplay from './StatusDisplay';
+import GuessForm from './GuessForm';
 import { loadLocalGameState } from '@/lib/storage';
 
 
 export default function GameMenu() {
     const [gameState, setGameState] = useState<GameState | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [winMessage, setWinMessage] = useState<string>("");
+    const [loseMessage, setLoseMessage] = useState<string>("");
 
     // Load previous game state - start new game depending on date
     useEffect(() => {
@@ -20,6 +23,12 @@ export default function GameMenu() {
         if (localState && localState.date === today) {
             // eslint-disable-next-line
             setGameState(localState);
+
+            if (localState.status === "WON") {
+                setWinMessage("You won!");
+            } else if (localState.status === "LOST") {
+                setLoseMessage("You lost!");
+            }
         } else {
             console.log("New day from previous gamestate, initiating new game!")
             const newState = initGame()
@@ -27,13 +36,12 @@ export default function GameMenu() {
         }
     }, [])
 
-    const [errorMessage, setErrorMessage] = useState<string>("");
-    const [winMessage, setWinMessage] = useState<string>("");
-    const [loseMessage, setLoseMessage] = useState<string>("");
-
     function handleGuess(guess: string) {
+        console.log(guess)
+
         const result = submitAnswer(gameState!, guess);
 
+        console.log(result)
         // All error handling, display in message. Doesn't update state
         if (!result.valid) {
             setErrorMessage(result.reason);
@@ -59,14 +67,17 @@ export default function GameMenu() {
                 <div>Loading...</div>
             ) : (
                 <div className="flex flex-col items-center">
-                    {gameState.manga.node.title}
+                    <h2 className="text-xl font-bold">{gameState.manga.node.title}</h2>
                     <Image className="h-80 w-auto" src={gameState.manga.node.main_picture.large} alt={gameState.manga.node.title} width={402} height={600} />
 
                     <StatusDisplay gameState={gameState} />
+                    <GuessForm gameState={gameState} handleGuess={handleGuess} />
+
+                    {errorMessage && <p className="text-red-500 mt-2 font-bold">{errorMessage}</p>}
+                    {winMessage && <p className="text-green-500 mt-2 font-bold">{winMessage}</p>}
+                    {loseMessage && <p className="text-red-500 mt-2 font-bold">{loseMessage}</p>}
                 </div>
             )}
-
-            {/* <GuessForm gameState={gameState} handleGuess={handleGuess}/> */}
         </div>
     )
 }

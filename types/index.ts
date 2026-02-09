@@ -33,8 +33,8 @@ export interface GameState {
     date: string;
     manga: Manga;
     numGuessesMade: number;
-    guessedGenres: Set<string>;
-    remainingGenres: Set<string>;
+    guessedGenres: string[];
+    remainingGenres: string[];
     numLives: number
     status: "PLAYING" | "WON" | "LOST";
 }

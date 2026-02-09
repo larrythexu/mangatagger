@@ -11,8 +11,8 @@ export function getNumGuesses(): number {
 }
 
 // Retrieve daily genres answers
-export function getAnswer(gameState: GameState): Set<string> {
-    return new Set(gameState.manga.node.genres.map((genre) => genre.name.toLowerCase()));
+export function getAnswer(gameState: GameState): string[] {
+    return gameState.manga.node.genres.map((genre) => genre.name.toUpperCase());
 }
 
 export function initGame() {
@@ -23,11 +23,12 @@ export function initGame() {
         date: today.toDateString(),
         manga,
         numGuessesMade: 0,
-        guessedGenres: new Set(),
-        remainingGenres: new Set(GENRE_SET),
+        guessedGenres: [],
+        remainingGenres: [...GENRE_SET],
         numLives: NUM_GUESSES,
         status: "PLAYING"
     }
+    console.log(genreList)
 
     saveGameState(newState); //TODO: consider if we save state here or elsewhere?
     return newState;
@@ -45,33 +46,41 @@ export function submitAnswer(gameState: GameState, playerAnswer: string): answer
     }
 
     // Check if genre is valid
-    playerAnswer = playerAnswer.toLowerCase()
+    playerAnswer = playerAnswer.toUpperCase()
     if (!GENRE_SET.has(playerAnswer)) {
         return { valid: false, gameState, reason: "Invalid genre!" }
-    } else if (gameState.guessedGenres.has(playerAnswer)) {
+    } else if (gameState.guessedGenres.includes(playerAnswer)) {
         return { valid: false, gameState, reason: "Already guessed genre!" }
     }
 
-    gameState.numGuessesMade++
+    // Create a new gameState object to trigger React re-renders
+    const newGameState: GameState = {
+        ...gameState,
+        numGuessesMade: gameState.numGuessesMade + 1
+    };
 
     // Handle answer
-    if (getAnswer(gameState).has(playerAnswer)) {
-        gameState.guessedGenres.add(playerAnswer)
-        gameState.remainingGenres.delete(playerAnswer)
+    if (getAnswer(gameState).includes(playerAnswer)) {
+        newGameState.guessedGenres = [...gameState.guessedGenres, playerAnswer];
+        newGameState.remainingGenres = gameState.remainingGenres.filter(g => g !== playerAnswer);
 
         // Check if player has won
-        if (gameState.guessedGenres === getAnswer(gameState)) {
-            gameState.status = "WON"
+        const answers = getAnswer(gameState);
+        if (newGameState.guessedGenres.length === answers.length &&
+            newGameState.guessedGenres.every(g => answers.includes(g))) {
+            newGameState.status = "WON";
         }
     } else {
-        gameState.numLives--
+        newGameState.numLives = gameState.numLives - 1;
+        newGameState.guessedGenres = [...gameState.guessedGenres];
+        newGameState.remainingGenres = [...gameState.remainingGenres];
 
         // Check if player has lost
-        if (gameState.numLives === 0) {
-            gameState.status = "LOST"
+        if (newGameState.numLives === 0) {
+            newGameState.status = "LOST";
         }
     }
 
-    saveGameState(gameState);
-    return { valid: true, gameState }
+    saveGameState(newGameState);
+    return { valid: true, gameState: newGameState };
 }
