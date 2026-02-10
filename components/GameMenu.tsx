@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import { initGame, submitAnswer } from '../lib/gameService';
 import { GameState } from '@/types';
 import Image from 'next/image';
+import GenreList from './GenreList';
 import StatusDisplay from './StatusDisplay';
 import GuessForm from './GuessForm';
 import { loadLocalGameState } from '@/lib/storage';
+
 
 
 export default function GameMenu() {
@@ -37,11 +39,8 @@ export default function GameMenu() {
     }, [])
 
     function handleGuess(guess: string) {
-        console.log(guess)
-
         const result = submitAnswer(gameState!, guess);
 
-        console.log(result)
         // All error handling, display in message. Doesn't update state
         if (!result.valid) {
             setErrorMessage(result.reason);
@@ -61,21 +60,24 @@ export default function GameMenu() {
     }
 
     return (
-        <div className="flex-col items-center">
+        <div>
 
             {gameState === null ? (
                 <div>Loading...</div>
             ) : (
                 <div className="flex flex-col items-center">
-                    <h2 className="text-xl font-bold">{gameState.manga.node.title}</h2>
-                    <Image className="h-80 w-auto" src={gameState.manga.node.main_picture.large} alt={gameState.manga.node.title} width={402} height={600} />
-
+                    <h2 className="text-xl font-bold mb-2">{gameState.manga.node.title}</h2>
+                    <div className="flex flex-row items-center justify-center gap-4">
+                        <Image className="h-80 w-auto" src={gameState.manga.node.main_picture.large} alt={gameState.manga.node.title} width={402} height={600} />
+                        <GenreList gameState={gameState} />
+                    </div>
                     <StatusDisplay gameState={gameState} />
                     <GuessForm gameState={gameState} handleGuess={handleGuess} />
 
                     {errorMessage && <p className="text-red-500 mt-2 font-bold">{errorMessage}</p>}
                     {winMessage && <p className="text-green-500 mt-2 font-bold">{winMessage}</p>}
                     {loseMessage && <p className="text-red-500 mt-2 font-bold">{loseMessage}</p>}
+                    <div className="h-100"></div>
                 </div>
             )}
         </div>

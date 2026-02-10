@@ -73,7 +73,7 @@ export function submitAnswer(gameState: GameState, playerAnswer: string): answer
     } else {
         newGameState.numLives = gameState.numLives - 1;
         newGameState.guessedGenres = [...gameState.guessedGenres];
-        newGameState.remainingGenres = [...gameState.remainingGenres];
+        newGameState.remainingGenres = gameState.remainingGenres.filter(g => g !== playerAnswer);
 
         // Check if player has lost
         if (newGameState.numLives === 0) {

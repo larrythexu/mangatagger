@@ -32,8 +32,21 @@ export default function GuessForm({ gameState, handleGuess }: { gameState: GameS
     }
 
     function handleKeyDown(e: React.KeyboardEvent) {
+        // Handle Enter key differently based on showSuggestions state
+        if (e.key === "Enter") {
+            e.preventDefault();
+            if (showSuggestions && highlightIndex >= 0 && highlightIndex < filteredGenres.length) {
+                selectAnswer(filteredGenres[highlightIndex]);
+            } else if (input.length >= 1 && highlightIndex === -1) {
+                handleGuess(input);
+                setInput("");
+            }
+            return;
+        }
+
         if (!showSuggestions) return;
 
+        // Nav suggestions
         if (e.key === "ArrowDown") {
             e.preventDefault();
             setHighlightIndex((prev) =>
@@ -44,13 +57,6 @@ export default function GuessForm({ gameState, handleGuess }: { gameState: GameS
         if (e.key === "ArrowUp") {
             e.preventDefault();
             setHighlightIndex((prev) => (prev > 0 ? prev - 1 : filteredGenres.length - 1));
-        }
-
-        if (e.key === "Enter") {
-            e.preventDefault();
-            if (highlightIndex >= 0 && highlightIndex < filteredGenres.length) {
-                selectAnswer(filteredGenres[highlightIndex]);
-            }
         }
 
         if (e.key === "Escape") {
