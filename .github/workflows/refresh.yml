@@ -20,6 +20,8 @@ jobs:
 
       - name: Fetch manga
         run: python scripts/fetch_manga.py
+        env:
+          MAL_API_KEY: ${{ secrets.MAL_API_KEY }}
 
       - name: Commit and push
         run: |
