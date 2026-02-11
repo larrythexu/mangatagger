@@ -77,7 +77,7 @@ export default function GameMenu() {
                     {errorMessage && <p className="text-red-500 mt-2 font-bold">{errorMessage}</p>}
                     {winMessage && <p className="text-green-500 mt-2 font-bold">{winMessage}</p>}
                     {loseMessage && <p className="text-red-500 mt-2 font-bold">{loseMessage}</p>}
-                    <div className="h-100"></div>
+                    <div className="h-60"></div>
                 </div>
             )}
         </div>

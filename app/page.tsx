@@ -1,4 +1,5 @@
 import GameMenu from "@/components/GameMenu";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -6,6 +7,7 @@ export default function Home() {
       <div className="text-5xl font-bold text-center mb-2">MangaTagger</div>
       <div className="text-md text-center text-gray-500 mb-5">Guess the genres from the manga cover!</div>
       <GameMenu />
+      <Footer />
     </div>
   );
 }

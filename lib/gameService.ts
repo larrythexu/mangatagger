@@ -28,7 +28,6 @@ export function initGame() {
         numLives: NUM_GUESSES,
         status: "PLAYING"
     }
-    console.log(genreList)
 
     saveGameState(newState); //TODO: consider if we save state here or elsewhere?
     return newState;

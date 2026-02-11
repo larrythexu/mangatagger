@@ -78,7 +78,7 @@ export default function GuessForm({ gameState, handleGuess }: { gameState: GameS
                     style={gameState.status !== "PLAYING" ? { opacity: 0.5 } : {}}
                 />
                 {showSuggestions && filteredGenres.length > 0 && (
-                    <ul className="absolute w-full bg-white border border-gray-300 list-none m-0 p-0 z-10 rounded-md mt-1 shadow-lg text-black">
+                    <ul className="absolute w-full bg-white border border-gray-300 list-none m-0 p-0 z-10 rounded-md mt-1 shadow-lg text-black max-h-60 overflow-y-auto">
                         {filteredGenres.map((genre, index) => (
                             <li
                                 key={genre}
