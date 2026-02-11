@@ -1,1 +1,30 @@
-# TODO: Add CRON job to run fetch_manga yearly
+name: MangaTagger Yearly Refresh
+
+on:
+  schedule:
+    - cron: '0 0 1 1 *'
+  workflow_dispatch: 
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-manga:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch manga
+        run: python fetch_manga.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions-bot"
+          git config user.email "${{ secrets.BOT_EMAIL }}"
+          git add . 
+          git commit -m "Yearly Refresh - ${{ github.sha }}"
+          git push
