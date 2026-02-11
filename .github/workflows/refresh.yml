@@ -26,5 +26,5 @@ jobs:
           git config user.name "github-actions-bot"
           git config user.email "${{ secrets.BOT_EMAIL }}"
           git add . 
-          git commit -m "Yearly Refresh - ${{ github.sha }}"
+          git commit -m "Yearly Refresh - ${{ github.sha }}" || echo "No changes to commit"
           git push
