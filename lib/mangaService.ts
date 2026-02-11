@@ -21,14 +21,8 @@ export function getDailyManga() {
     const dayIndex = dateToDateIdx(today);
 
     // Get slice of array - 366 days (last day only used if leap year)
-    const mangaList: Manga[] = top500mangas.data;
+    const mangaList: Manga[] = top500mangas;
     const slicedMangaList = mangaList.slice(0, DAYS_PER_YEAR);
-
-    // Add offset slicing for more randomness??
-    // const offset = (seed * DAYS_PER_YEAR) % mangaList.length;
-    // const firstHalf = mangaList.slice(offset)
-    // const secondHalf = mangaList.slice(0, DAYS_PER_YEAR - firstHalf.length)
-    // const shuffledMangaList = [...firstHalf, ...secondHalf];
 
     return slicedMangaList[dayIndex];
 }

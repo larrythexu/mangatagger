@@ -33,12 +33,13 @@ export function initGame() {
     saveGameState(newState); //TODO: consider if we save state here or elsewhere?
     return newState;
 }
-
-// SubmitAnswer: Handle main game logic (TODO: possible add guess limit as well)
-// When player submits an answer, update gameState
-// If invalid answer/gamestate, returns failed gameState with reason
-// Otherwise, checks if player gussed correctly or not, losing life if they do. 
-// Game ends if player guesses all genres OR runs out of lives
+/* 
+SubmitAnswer: Handle main game logic (TODO: possible add guess limit as well)
+When player submits an answer, update gameState
+If invalid answer/gamestate, returns failed gameState with reason
+Otherwise, checks if player gussed correctly or not, losing life if they do. 
+Game ends if player guesses all genres OR runs out of lives
+*/
 export function submitAnswer(gameState: GameState, playerAnswer: string): answerResult {
     if (gameState.status !== "PLAYING") {
         console.log("Game isn't in playing state!")

@@ -20,9 +20,6 @@ export default function StatusDisplay({ gameState }: { gameState: GameState }) {
             </div>
 
             <p>Guesses Made: {gameState.numGuessesMade}</p>
-            {/* {Array.from(gameState.guessedGenres).map((genre) => (
-                <p key={genre}>{genre}</p>
-            ))} */}
         </div>
     )
 }
