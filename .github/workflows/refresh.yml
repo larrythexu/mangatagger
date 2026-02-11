@@ -19,7 +19,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch manga
-        run: python fetch_manga.py
+        run: python scripts/fetch_manga.py
 
       - name: Commit and push
         run: |
